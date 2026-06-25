@@ -1,0 +1,28 @@
+{
+  "_comment": "Offline role <- action reverse map. Ordered: an Azure control-plane action pattern (Pattern, '*' wildcard allowed) -> the built-in role(s) that include it, in least-privilege order. Used by RoleActionMapper as a fallback when live role definitions are not available, to turn an action parsed from an AuthorizationFailed into a grantable role name. Order is significant: earlier entries win.",
+  "Entries": [
+    { "Pattern": "*/read", "Roles": ["Reader"] },
+    { "Pattern": "Microsoft.Resources/subscriptions/resourceGroups/read", "Roles": ["Reader"] },
+
+    { "Pattern": "Microsoft.Resources/subscriptions/resourceGroups/write", "Roles": ["Contributor"] },
+    { "Pattern": "Microsoft.Resources/subscriptions/resourceGroups/delete", "Roles": ["Contributor"] },
+    { "Pattern": "Microsoft.Resources/deployments/*", "Roles": ["Contributor"] },
+    { "Pattern": "Microsoft.Storage/storageAccounts/write", "Roles": ["Storage Account Contributor", "Contributor"] },
+    { "Pattern": "Microsoft.Storage/*", "Roles": ["Storage Account Contributor", "Contributor"] },
+    { "Pattern": "Microsoft.KeyVault/vaults/write", "Roles": ["Contributor"] },
+    { "Pattern": "Microsoft.Compute/virtualMachines/write", "Roles": ["Virtual Machine Contributor", "Contributor"] },
+    { "Pattern": "Microsoft.Network/*", "Roles": ["Network Contributor", "Contributor"] },
+
+    { "Pattern": "Microsoft.Authorization/roleAssignments/write", "Roles": ["Role Based Access Control Administrator", "User Access Administrator", "Owner"] },
+    { "Pattern": "Microsoft.Authorization/roleAssignments/delete", "Roles": ["Role Based Access Control Administrator", "User Access Administrator", "Owner"] },
+    { "Pattern": "Microsoft.Authorization/policyAssignments/write", "Roles": ["Resource Policy Contributor"] },
+    { "Pattern": "Microsoft.Authorization/*", "Roles": ["User Access Administrator", "Owner"] },
+
+    { "Pattern": "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read", "Roles": ["Storage Blob Data Reader"] },
+    { "Pattern": "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write", "Roles": ["Storage Blob Data Contributor"] },
+
+    { "Pattern": "*/write", "Roles": ["Contributor"] },
+    { "Pattern": "*/delete", "Roles": ["Contributor"] },
+    { "Pattern": "*/action", "Roles": ["Contributor"] }
+  ]
+}

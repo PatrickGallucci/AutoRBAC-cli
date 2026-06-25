@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>AutoRbac.Core</RootNamespace>
+    <AssemblyName>AutoRbac.Core</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Live Azure provider: role assignments / definitions / grants via ARM. -->
+    <PackageReference Include="Azure.Identity" Version="1.13.1" />
+    <PackageReference Include="Azure.ResourceManager.Authorization" Version="1.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Knowledge bases ship as embedded resources so the library is self-contained. -->
+    <EmbeddedResource Include="Data\CommandRoleMap.json" />
+    <EmbeddedResource Include="Data\RoleActionMap.json" />
+  </ItemGroup>
+
+</Project>

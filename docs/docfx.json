@@ -1,0 +1,45 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [ "src/AutoRbac.Core/AutoRbac.Core.csproj" ],
+          "src": ".."
+        }
+      ],
+      "dest": "api",
+      "outputFormat": "mref",
+      "properties": {
+        "TargetFramework": "net8.0",
+        "Configuration": "Release"
+      }
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [ "**/*.{md,yml}" ],
+        "exclude": [ "_site/**", "obj/**" ]
+      }
+    ],
+    "resource": [
+      { "files": [ "images/**" ] }
+    ],
+    "output": "_site",
+    "template": [ "default", "modern" ],
+    "globalMetadata": {
+      "_appName": "AutoRBAC",
+      "_appTitle": "AutoRBAC",
+      "_appFooter": "AutoRBAC &mdash; MIT licensed. Built with DocFX.",
+      "_enableSearch": true,
+      "_disableContribution": false,
+      "_gitContribute": {
+        "repo": "https://github.com/PatrickGallucci/AutoRBAC-cli",
+        "branch": "main"
+      }
+    },
+    "sitemap": {
+      "baseUrl": "https://patrickgallucci.github.io/AutoRBAC-cli/"
+    }
+  }
+}

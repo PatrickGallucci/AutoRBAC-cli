@@ -1,0 +1,14 @@
+- name: Getting Started
+  href: getting-started.md
+- name: Installation
+  href: installation.md
+- name: Usage
+  href: usage.md
+- name: Configuration
+  href: configuration.md
+- name: Commands
+  href: commands.md
+- name: Release Notes
+  href: release-notes.md
+- name: Contributing
+  href: contributing.md

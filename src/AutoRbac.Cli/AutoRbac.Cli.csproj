@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>AutoRbac.Cli</RootNamespace>
+    <AssemblyName>autorbac</AssemblyName>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <!-- Pack as a .NET global/local tool: `dotnet tool install -g AutoRbac.Cli` -> `autorbac`. -->
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>autorbac</ToolCommandName>
+    <PackageId>AutoRbac.Cli</PackageId>
+    <Version>2.0.0</Version>
+    <Authors>Patrick Gallucci</Authors>
+    <Company>Patrick Gallucci</Company>
+    <Description>Live, least-privilege RBAC discovery and assignment across Azure, Microsoft Graph (Entra), Microsoft Fabric, and Microsoft Purview, as a cross-platform .NET CLI. Resolves the least-privilege role(s) a command needs, tests whether a caller holds them, and emits idempotent grant/revoke snippets under Zero Trust principles.</Description>
+    <PackageTags>RBAC;Azure;Entra;Security;ZeroTrust;LeastPrivilege;Fabric;Purview;IAM;Provisioning;CLI;dotnet-tool</PackageTags>
+    <PackageProjectUrl>https://github.com/PatrickGallucci/AutoRBAC-cli</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PatrickGallucci/AutoRBAC-cli</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See https://github.com/PatrickGallucci/AutoRBAC-cli/blob/main/CHANGELOG.md</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta5.25306.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoRbac.Core\AutoRbac.Core.csproj" />
+  </ItemGroup>
+
+</Project>

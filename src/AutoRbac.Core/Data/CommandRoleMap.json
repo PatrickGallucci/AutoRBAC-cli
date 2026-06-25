@@ -1,0 +1,189 @@
+{
+  "_comment": "PSAutoRBAC command -> RBAC requirement knowledge base. Each platform maps a command/operation name (case-insensitive) to the minimum role/permission set required to execute it at the given scope. Unknown commands resolve to the platform '*Default' entry and report IsKnown=false.",
+
+  "Azure PowerShell": {
+    "Connect-AzAccount": {
+      "Roles": ["Reader"],
+      "Actions": ["*/read"],
+      "ScopeLevel": "Subscription",
+      "Notes": "Authentication itself needs no RBAC role, but a usable session typically requires at least Reader to enumerate subscriptions and resources."
+    },
+    "New-AzResourceGroup": {
+      "Roles": ["Contributor"],
+      "Actions": ["Microsoft.Resources/subscriptions/resourceGroups/write"],
+      "ScopeLevel": "Subscription",
+      "Notes": "Creating a resource group is a write at subscription scope."
+    },
+    "Remove-AzResourceGroup": {
+      "Roles": ["Contributor"],
+      "Actions": ["Microsoft.Resources/subscriptions/resourceGroups/delete"],
+      "ScopeLevel": "ResourceGroup",
+      "Notes": "Deleting a resource group requires delete on the group and its contained resources."
+    },
+    "Set-AzResourceGroup": {
+      "Roles": ["Contributor"],
+      "Actions": ["Microsoft.Resources/subscriptions/resourceGroups/write"],
+      "ScopeLevel": "ResourceGroup",
+      "Notes": "Updating tags / properties on a resource group is a write."
+    },
+    "New-AzRoleAssignment": {
+      "Roles": ["Role Based Access Control Administrator"],
+      "Actions": ["Microsoft.Authorization/roleAssignments/write"],
+      "ScopeLevel": "ResourceGroup",
+      "Notes": "Creating role assignments requires roleAssignments/write. RBAC Administrator, User Access Administrator, or Owner grant this."
+    },
+    "Remove-AzRoleAssignment": {
+      "Roles": ["Role Based Access Control Administrator"],
+      "Actions": ["Microsoft.Authorization/roleAssignments/delete"],
+      "ScopeLevel": "ResourceGroup",
+      "Notes": "Removing role assignments requires roleAssignments/delete."
+    },
+    "New-AzPolicyAssignment": {
+      "Roles": ["Resource Policy Contributor"],
+      "Actions": ["Microsoft.Authorization/policyAssignments/write"],
+      "ScopeLevel": "ResourceGroup",
+      "Notes": "Assigning policy requires policyAssignments/write."
+    },
+    "New-AzStorageAccount": {
+      "Roles": ["Contributor"],
+      "Actions": ["Microsoft.Storage/storageAccounts/write"],
+      "ScopeLevel": "ResourceGroup",
+      "Notes": "Creating a storage account is a write at the resource-group scope."
+    },
+    "New-AzKeyVault": {
+      "Roles": ["Contributor"],
+      "Actions": ["Microsoft.KeyVault/vaults/write"],
+      "ScopeLevel": "ResourceGroup",
+      "Notes": "Creating a key vault is a write; data-plane access needs a separate Key Vault data role."
+    },
+    "New-AzStorageContainer": {
+      "Roles": ["Storage Blob Data Contributor"],
+      "Actions": ["Microsoft.Storage/storageAccounts/blobServices/containers/write"],
+      "ScopeLevel": "Resource",
+      "Notes": "Creating a blob container is a data-plane write; assign the data role at the storage account (or container) scope. The control-plane Contributor role does NOT grant blob data access."
+    },
+    "Set-AzStorageBlobContent": {
+      "Roles": ["Storage Blob Data Contributor"],
+      "Actions": ["Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write"],
+      "ScopeLevel": "Resource",
+      "Notes": "Uploading a blob is a data-plane write; assign the data role at the storage account (or container) scope."
+    },
+    "New-AzResource": {
+      "Roles": ["Contributor"],
+      "Actions": ["Microsoft.Resources/deployments/write"],
+      "ScopeLevel": "ResourceGroup",
+      "Notes": "Creating arbitrary resources requires write at the target scope; Contributor is the broad baseline."
+    },
+    "*Default": {
+      "Roles": ["Contributor"],
+      "Actions": ["*/read", "*/write"],
+      "ScopeLevel": "Subscription",
+      "Notes": "Unknown command; defaulting to Contributor as a conservative baseline. Validate and add an explicit mapping, or use --live-probe to derive the exact action."
+    }
+  },
+
+  "Microsoft Graph": {
+    "Connect-MgGraph": {
+      "Roles": ["Directory Readers"],
+      "Actions": ["Directory.Read.All"],
+      "ScopeLevel": "Tenant",
+      "Notes": "Sign-in plus delegated/app scopes; Directory Readers is the minimum to enumerate directory objects."
+    },
+    "New-MgGroup": {
+      "Roles": ["Groups Administrator"],
+      "Actions": ["Group.ReadWrite.All"],
+      "ScopeLevel": "Tenant",
+      "Notes": "Creating groups requires Group.ReadWrite.All (or Groups Administrator)."
+    },
+    "New-MgGroupMember": {
+      "Roles": ["Groups Administrator"],
+      "Actions": ["GroupMember.ReadWrite.All"],
+      "ScopeLevel": "Tenant",
+      "Notes": "Adding members to a group requires group membership write."
+    },
+    "New-MgUser": {
+      "Roles": ["User Administrator"],
+      "Actions": ["User.ReadWrite.All"],
+      "ScopeLevel": "Tenant",
+      "Notes": "Creating users requires User.ReadWrite.All (or User Administrator)."
+    },
+    "New-MgServicePrincipal": {
+      "Roles": ["Application Administrator"],
+      "Actions": ["Application.ReadWrite.All"],
+      "ScopeLevel": "Tenant",
+      "Notes": "Creating service principals requires Application.ReadWrite.All."
+    },
+    "*Default": {
+      "Roles": ["Directory Readers"],
+      "Actions": ["Directory.Read.All"],
+      "ScopeLevel": "Tenant",
+      "Notes": "Unknown Graph command; defaulting to Directory Readers. Prefer the Graph command catalog for the exact permission."
+    }
+  },
+
+  "Microsoft Fabric": {
+    "New-FabricWorkspace": {
+      "Roles": ["Admin"],
+      "Actions": ["Create workspace; tenant setting \"Create workspaces\" must be enabled for the principal."],
+      "ScopeLevel": "Tenant",
+      "Notes": "Workspace creation is gated by a tenant setting; the creator becomes workspace Admin."
+    },
+    "Add-FabricWorkspaceRoleAssignment": {
+      "Roles": ["Admin"],
+      "Actions": ["workspaces/{id}/roleAssignments write"],
+      "ScopeLevel": "Workspace",
+      "Notes": "Only a workspace Admin can manage role assignments."
+    },
+    "New-FabricItem": {
+      "Roles": ["Contributor"],
+      "Actions": ["workspaces/{id}/items write"],
+      "ScopeLevel": "Workspace",
+      "Notes": "Creating items (lakehouse, notebook, pipeline, etc.) requires at least Contributor."
+    },
+    "Get-FabricItem": {
+      "Roles": ["Viewer"],
+      "Actions": ["workspaces/{id}/items read"],
+      "ScopeLevel": "Workspace",
+      "Notes": "Reading items requires at least Viewer."
+    },
+    "*Default": {
+      "Roles": ["Contributor"],
+      "Actions": ["workspaces/{id} write"],
+      "ScopeLevel": "Workspace",
+      "Notes": "Unknown Fabric operation; defaulting to the Contributor workspace role. Admin > Member > Contributor > Viewer - a higher role satisfies a lower requirement."
+    }
+  },
+
+  "Microsoft Purview": {
+    "Register-PurviewDataSource": {
+      "Roles": ["Data Source Admin"],
+      "Actions": ["collections/{name} register data source"],
+      "ScopeLevel": "Collection",
+      "Notes": "Registering a data source requires Data Source Admin on the collection."
+    },
+    "Start-PurviewScan": {
+      "Roles": ["Data Source Admin"],
+      "Actions": ["scans trigger"],
+      "ScopeLevel": "Collection",
+      "Notes": "Triggering scans requires Data Source Admin."
+    },
+    "Set-PurviewAsset": {
+      "Roles": ["Data Curator"],
+      "Actions": ["catalog assets write"],
+      "ScopeLevel": "Collection",
+      "Notes": "Editing catalog assets / classifications requires Data Curator."
+    },
+    "Get-PurviewAsset": {
+      "Roles": ["Data Reader"],
+      "Actions": ["catalog assets read"],
+      "ScopeLevel": "Collection",
+      "Notes": "Reading catalog assets requires Data Reader."
+    },
+    "*Default": {
+      "Roles": ["Data Reader"],
+      "Actions": ["catalog read"],
+      "ScopeLevel": "Collection",
+      "Notes": "Unknown Purview operation; defaulting to the Data Reader metadata-policy role. Roles are granted via collection metadata policies, not Azure role assignments."
+    }
+  }
+}
