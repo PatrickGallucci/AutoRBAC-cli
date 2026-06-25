@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **CI now publishes to NuGet via Trusted Publishing** (keyless OIDC) instead of a
+  stored `NUGET_API_KEY`. The release workflow requests a GitHub OIDC token and
+  `NuGet/login@v1` exchanges it for a short-lived key. Requires a one-time
+  nuget.org Trusted Publishing policy and a `NUGET_USER` repo secret (see README).
+
 ## [2.0.0] - 2026-06-24
 
 ### Changed (breaking)

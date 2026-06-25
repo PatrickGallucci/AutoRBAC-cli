@@ -140,6 +140,18 @@ tests/AutoRbac.Tests/ xUnit suite (offline + live-path fakes), ported from the o
 - **Knowledge base** — [`src/AutoRbac.Core/Data/CommandRoleMap.json`](src/AutoRbac.Core/Data/CommandRoleMap.json) maps `command → roles/actions/scope` per platform (pure data). [`RoleActionMap.json`](src/AutoRbac.Core/Data/RoleActionMap.json) maps Azure actions back to sensible roles for offline use. Both ship as embedded resources; pass `--map-path` to override the command map.
 - **A new platform** — implement `IRbacProvider` (or subclass `ProviderBase`) and register it in `ProviderRegistry.CreateDefault()`. No engine changes required.
 
+## Publishing (NuGet Trusted Publishing)
+
+The [release workflow](.github/workflows/release.yml) publishes the `AutoRbac.Cli` tool to NuGet.org on every `v*` tag using **[Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing)** — keyless, OIDC-based, with **no long-lived API key** stored in the repo. The job requests a GitHub OIDC token (`id-token: write`), and `NuGet/login@v1` exchanges it for a short-lived (~1 hour) key just before the push.
+
+One-time setup (portal steps — they need your nuget.org sign-in):
+
+1. **Create the policy on nuget.org:** sign in → your username → **Trusted Publishing** → add a policy with **Repository Owner** `PatrickGallucci`, **Repository** `AutoRBAC-cli`, **Workflow File** `release.yml` (file name only), Environment left blank.
+2. **Add the username secret:** in the GitHub repo, **Settings → Secrets and variables → Actions → New repository secret**, name `NUGET_USER`, value = your nuget.org **profile name** (not your email).
+3. **Publish:** push a tag (`git tag vX.Y.Z && git push origin vX.Y.Z`) or re-run the **Release** workflow. Until the secret is set the publish step self-skips with a warning, so the workflow stays green.
+
+> First publish of a brand-new package id may require an initial manual upload, since Trusted Publishing pushes to an existing/owned id.
+
 ## License
 
 [MIT](LICENSE)
